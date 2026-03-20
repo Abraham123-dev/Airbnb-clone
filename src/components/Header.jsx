@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { clsx } from 'clsx';
 
 const Header = () => {
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(True);
 
   useEffect(() => {
     const handleScroll = () => {
