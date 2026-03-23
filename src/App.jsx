@@ -11,8 +11,9 @@ function App() {
         {/* Main Content Area */}
         <main className="pt-28 pb-10 px-6 max-w-[1440px] mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {/* Example listing cards will go here */}
-            {Array.from({ length: 8 }).map((_, i) => (
+
+            {/* this  listing cards will go here */}
+            {Array.from({ length: 10}).map((_, i) => (
               <div key={i} className="flex flex-col gap-2 group cursor-pointer animate-in fade-in slide-in-from-bottom-2 duration-500 fill-mode-both" style={{ animationDelay: `${i * 100}ms` }}>
                 <div className="aspect-square w-full relative overflow-hidden rounded-xl">
                   <div className="w-full h-full bg-gray-200" />
@@ -32,7 +33,7 @@ function App() {
                       <span className="text-sm font-normal">4.92</span>
                     </div>
                   </div>
-                  <span className="text-text-secondary text-sm">Hosted by Antigravity</span>
+                  <span className="text-text-secondary text-sm">Made by Abraham</span>
                   <span className="text-text-secondary text-sm">Oct 23 - 28</span>
                   <div className="mt-1">
                     <span className="font-semibold text-[15px]">$250</span>
