@@ -1,48 +1,185 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Header from './components/Header';
+import ListingCard from './components/ListingCard';
+import FilterBar from './components/FilterBar';
+
+const PROPERTIES = [
+  {
+    id: '1',
+    title: 'Luxury Villa with Infinity Pool',
+    location: 'Santorini, Greece',
+    rating: 4.95,
+    price: 850,
+    images: [
+      'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1542318238-439133b3ca8e?auto=format&fit=crop&w=800&q=80'
+    ],
+    details: { bedrooms: 4, baths: 3 },
+    sqft: 2500
+  },
+  {
+    id: '2',
+    title: 'Modern Cabin in the Woods',
+    location: 'Aspen, Colorado',
+    rating: 4.88,
+    price: 320,
+    images: [
+      'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1433838552652-f9a46b332c40?auto=format&fit=crop&w=800&q=80'
+    ],
+    details: { bedrooms: 2, baths: 1 },
+    sqft: 1200
+  },
+  {
+    id: '3',
+    title: 'Minimalist Tokyo Apartment',
+    location: 'Shibuya, Tokyo',
+    rating: 4.98,
+    price: 150,
+    images: [
+      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1505691938895-1758d7eaa511?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=800&q=80'
+    ],
+    details: { bedrooms: 1, baths: 1 },
+    sqft: 650
+  },
+  {
+    id: '4',
+    title: 'Beachfront Penthouse',
+    location: 'Malibu, California',
+    rating: 4.92,
+    price: 1200,
+    images: [
+      'https://images.unsplash.com/photo-1512915922686-57c11f9ad6b3?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1505692433770-36f19f51681d?auto=format&fit=crop&w=800&q=80'
+    ],
+    details: { bedrooms: 3, baths: 3 },
+    sqft: 1800
+  },
+  {
+    id: '5',
+    title: 'Rustic Italian Farmhouse',
+    location: 'Tuscany, Italy',
+    rating: 4.85,
+    price: 280,
+    images: [
+      'https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1464146072230-91cabc968266?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80'
+    ],
+    details: { bedrooms: 5, baths: 4 },
+    sqft: 3500
+  },
+  {
+    id: '6',
+    title: 'Modern Glass House',
+    location: 'Reykjavik, Iceland',
+    rating: 4.99,
+    price: 450,
+    images: [
+      'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1449156001407-3932e6040188?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=800&q=80'
+    ],
+    details: { bedrooms: 2, baths: 2 },
+    sqft: 1400
+  },
+  {
+    id: '7',
+    title: 'Traditional Balinese Villa',
+    location: 'Ubud, Bali',
+    rating: 4.91,
+    price: 180,
+    images: [
+      'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1528642466248-acc436417730?auto=format&fit=crop&w=800&q=80'
+    ],
+    details: { bedrooms: 3, baths: 3 },
+    sqft: 2200
+  },
+  {
+    id: '8',
+    title: 'London Central Loft',
+    location: 'Soho, London',
+    rating: 4.79,
+    price: 550,
+    images: [
+      'https://images.unsplash.com/photo-1502672023488-70e25813eb80?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=800&q=80'
+    ],
+    details: { bedrooms: 2, baths: 2 },
+    sqft: 1100
+  }
+];
 
 function App() {
+  const [filters, setFilters] = useState({ 
+    priceRange: { min: 0, max: 2000 } 
+  });
+
+  const handleFilterChange = (newFilters) => {
+    setFilters(prev => ({ ...prev, ...newFilters }));
+  };
+
+  const filteredProperties = PROPERTIES.filter(property => {
+    const min = filters.priceRange.min === '' ? 0 : filters.priceRange.min;
+    const max = filters.priceRange.max === '' ? Infinity : filters.priceRange.max;
+    return property.price >= min && property.price <= max;
+  });
+
   return (
     <Router>
       <div className="min-h-screen bg-white font-sans text-text-primary">
         <Header />
         
-        {/* Main Content Area */}
-        <main className="pt-28 pb-10 px-6 max-w-[1440px] mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-
-            {/* this  listing cards will go here */}
-            {Array.from({ length: 10}).map((_, i) => (
-              <div key={i} className="flex flex-col gap-2 group cursor-pointer animate-in fade-in slide-in-from-bottom-2 duration-500 fill-mode-both" style={{ animationDelay: `${i * 100}ms` }}>
-                <div className="aspect-square w-full relative overflow-hidden rounded-xl">
-                  <div className="w-full h-full bg-gray-200" />
-                  <div className="absolute top-3 right-3">
-                    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false" style={{ display: 'block', fill: 'rgba(0,0,0,0.5)', height: '24px', width: '24px', stroke: '#fff', strokeWidth: '2', overflow: 'visible' }}>
-                      <path d="m16 28c7-4.733 14-10 14-17 0-4.418-3.582-8-8-8-2.43 0-4.63 1.085-6.103 2.813-.15.174-.326.357-.497.551-.171-.194-.347-.377-.497-.551-1.474-1.728-3.674-2.813-6.103-2.813-4.418 0-8 3.582-8 8 0 7 7 12.267 14 17z"></path>
-                    </svg>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-0.5 mt-1">
-                  <div className="flex justify-between items-start">
-                    <span className="font-semibold text-[15px]">Lagos, Nigeria</span>
-                    <div className="flex items-center gap-1">
-                      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false" style={{ display: 'block', height: '12px', width: '12px', fill: 'currentcolor' }}>
-                        <path d="M15.094 1.579l-4.124 8.357-9.223 1.34c-.178.026-.337.119-.444.262-.107.143-.153.32-.128.496.025.176.126.331.278.432l6.674 6.505-1.575 9.186c-.03.177.017.358.129.497.112.139.278.225.459.239.182.013.361-.048.499-.168L16 24.38l8.24 4.332c.159.083.346.1.518.046.172-.054.316-.176.398-.338.082-.162.096-.349.039-.521l-1.575-9.186 6.674-6.505c.152-.101.253-.256.278-.432.025-.176-.021-.353-.128-.496-.107-.143-.266-.236-.444-.262l-9.223-1.34-4.124-8.357c-.161-.326-.827-.326-.988 0z"></path>
-                      </svg>
-                      <span className="text-sm font-normal">4.92</span>
-                    </div>
-                  </div>
-                  <span className="text-text-secondary text-sm">Made by Abraham</span>
-                  <span className="text-text-secondary text-sm">Oct 23 - 28</span>
-                  <div className="mt-1">
-                    <span className="font-semibold text-[15px]">$250</span>
-                    <span className="font-normal text-[15px]"> night</span>
-                  </div>
-                </div>
-              </div>
-            ))}
+        {/* Sub-header Filter Area */}
+        <div className="fixed top-20 left-0 right-0 z-40 bg-white border-b border-ui-border py-4">
+          <div className="max-w-[1440px] mx-auto px-6 flex justify-between items-center">
+            <div className="flex gap-8 overflow-x-auto no-scrollbar py-2">
+              {['Amazing pools', 'Cabins', 'Beachfront', 'Luxe', 'Views', 'Countryside', 'Tiny homes', 'Castles'].map((cat) => (
+                <button key={cat} className="flex flex-col items-center gap-2 opacity-60 hover:opacity-100 transition-opacity whitespace-nowrap group">
+                  <div className="w-6 h-6 bg-gray-100 rounded-md group-hover:bg-gray-200 transition-colors" />
+                  <span className="text-xs font-medium">{cat}</span>
+                </button>
+              ))}
+            </div>
+            <FilterBar onFilterChange={handleFilterChange} />
           </div>
+        </div>
+        
+        {/* Main Content Area */}
+        <main className="pt-48 pb-10 px-6 max-w-[1440px] mx-auto">
+          {filteredProperties.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 gap-y-10">
+              {filteredProperties.map((property, index) => (
+                <div 
+                  key={property.id} 
+                  className="animate-in fade-in slide-in-from-bottom-2 duration-500 fill-mode-both" 
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <ListingCard property={property} showSpecs={true} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <h2 className="text-2xl font-semibold mb-2">No properties found</h2>
+              <p className="text-text-secondary">Try adjusting your filters to find what you're looking for.</p>
+              <button 
+                onClick={() => handleFilterChange({ priceRange: { min: 0, max: 2000 } })}
+                className="mt-4 font-semibold underline"
+              >
+                Clear all filters
+              </button>
+            </div>
+          )}
         </main>
       </div>
     </Router>
